@@ -18,17 +18,21 @@ import java.util.Iterator;
 
 public class AudienceApp {
     public static void main(String[] args) throws IOException {
-        Path inputPath = Paths.get("src\\main\\resources\\StatementsDescending.txt");
+        Path inputPath;
+        if(args[0]!=null){
+             inputPath = Paths.get(args[0]);
+        }else{
+             inputPath = Paths.get("src\\main\\resources\\example.txt");
+        }
         Calendar c1 =Calendar.getInstance();
         System.out.println("read data ...");
-
-
+        MultiValuedMap<Integer, Statement> map= readStatements(inputPath);
         Calendar c2 =Calendar.getInstance();
+        System.out.print("data read time: ");
         System.out.println(c2.getTimeInMillis()-c1.getTimeInMillis());
-        calculateAudience(readStatements(inputPath));
-        System.out.println("finish");
+        calculateAudience(map);
         Calendar c3 =Calendar.getInstance();
-        System.out.println(c3.getTimeInMillis()-c2.getTimeInMillis());
+        System.out.print("overall time: ");
         System.out.println(c3.getTimeInMillis()-c1.getTimeInMillis());
     }
 
