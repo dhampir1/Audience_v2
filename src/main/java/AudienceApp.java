@@ -18,11 +18,14 @@ import java.util.Iterator;
 
 public class AudienceApp {
     public static void main(String[] args) throws IOException {
+        InputStatementGenerator generator =new InputStatementGenerator();
         Path inputPath;
         if(args.length>0 && args[0]!=null){
              inputPath = Paths.get(args[0]);
         }else{
-             inputPath = Paths.get("src\\main\\resources\\example.txt");
+            Path outputPath = Paths.get("src\\main\\resources\\StatementsDescending.txt");
+            generator.generate(5000000, outputPath);
+            inputPath = Paths.get("src\\main\\resources\\StatementsDescending.txt");
         }
         Calendar c1 =Calendar.getInstance();
         System.out.println("read data ...");
