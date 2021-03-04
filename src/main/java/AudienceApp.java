@@ -19,7 +19,7 @@ import java.util.Iterator;
 public class AudienceApp {
     public static void main(String[] args) throws IOException {
         Path inputPath;
-        if(args[0]!=null){
+        if(args.length>0 && args[0]!=null){
              inputPath = Paths.get(args[0]);
         }else{
              inputPath = Paths.get("src\\main\\resources\\example.txt");
