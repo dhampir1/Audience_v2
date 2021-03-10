@@ -11,7 +11,9 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class AudienceAppUtil {
 
@@ -27,50 +29,51 @@ public class AudienceAppUtil {
         return map;
     }
 
-    public void calculateAudience (MultiValuedMap<Integer, Statement> map) {
+    public List<OutputStatement> calculateAudience (MultiValuedMap<Integer, Statement> map) {
+         List<OutputStatement> outputStatements = new ArrayList<>();
 
-        FileOutputStream fileOutputStream = null;
+            for (Integer key : map.keySet()) {
+                Iterator<Statement> it = map.get(key).stream().sorted().iterator();
+                LocalDateTime endTime;
+
+                long duration;
+                Statement statement2 = null;
+                Statement statement1 = it.next();
+
+                while (it.hasNext()) {
+                    statement2 = it.next();
+                    if (isSameDay(statement1.getStartTime(), statement2.getStartTime())) {
+                        endTime = statement2.getStartTime();
+                        duration = ChronoUnit.SECONDS.between(statement1.getStartTime(), endTime);
+                        outputStatements.add(new OutputStatement(key, statement1.getChannel(), statement1.getStartTime(), endTime, statement1.getActivity(), duration));
+                    } else {
+                        endTime = statement1.getStartTime().plusDays(1).withHour(0).withMinute(0).withSecond(0);
+                        duration = ChronoUnit.SECONDS.between(statement1.getStartTime(), endTime);
+                        outputStatements.add(new OutputStatement(key, statement1.getChannel(), statement1.getStartTime(), endTime, statement1.getActivity(), duration));
+                    }
+                    statement1 = statement2;
+                }
+                if (statement2 != null) {
+                    endTime = statement2.getStartTime().plusDays(1).withHour(0).withMinute(0).withSecond(0);
+                    duration = ChronoUnit.SECONDS.between(statement2.getStartTime(), endTime);
+                    outputStatements.add(new OutputStatement(statement2.getHomeNumber(), statement2.getChannel(), statement2.getStartTime(), endTime, statement2.getActivity(), duration));
+            }
+        }
+         return outputStatements;
+    }
+
+    public void saveToFile (List<OutputStatement> outputStatements){
+         System.out.println("Saving output...");
+         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream("output.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        if(fileOutputStream != null){
+        if(fileOutputStream != null) {
             PrintWriter printWriter = new PrintWriter(fileOutputStream);
             printWriter.println("HomeNo|Channel|StartTime|Activity|EndTime|Duration");
-            try (ProgressBar pb = new ProgressBar("Calculate", map.keySet().size())) {
-                for (Integer key : map.keySet()) {
-                    Iterator<Statement> it = map.get(key).stream().sorted().iterator();
-                    LocalDateTime endTime;
-
-                    long duration;
-                    Statement statement2 = null;
-                    Statement statement1 = it.next();
-
-                    while (it.hasNext()) {
-                        statement2 = it.next();
-                        if (isSameDay(statement1.getStartTime(), statement2.getStartTime())) {
-                            endTime = statement2.getStartTime();
-                            duration = ChronoUnit.SECONDS.between(statement1.getStartTime(), endTime);
-                            OutputStatement outputStatement = new OutputStatement(key, statement1.getChannel(), statement1.getStartTime(), endTime, statement1.getActivity(), duration);
-                            printWriter.println(outputStatement);
-                        } else {
-                            endTime = statement1.getStartTime().plusDays(1).withHour(0).withMinute(0).withSecond(0);
-                            duration = ChronoUnit.SECONDS.between(statement1.getStartTime(), endTime);
-                            OutputStatement outputStatement = new OutputStatement(key, statement1.getChannel(), statement1.getStartTime(), endTime, statement1.getActivity(), duration);
-                            printWriter.println(outputStatement);
-                        }
-                        statement1 = statement2;
-                    }
-                    if (statement2 != null) {
-                        endTime = statement2.getStartTime().plusDays(1).withHour(0).withMinute(0).withSecond(0);
-                        duration = ChronoUnit.SECONDS.between(statement2.getStartTime(), endTime);
-                        OutputStatement outputStatement = new OutputStatement(statement2.getHomeNumber(), statement2.getChannel(), statement2.getStartTime(), endTime, statement2.getActivity(), duration);
-                        printWriter.println(outputStatement);
-                    }
-                    pb.step();
-                }
-            }
+            outputStatements.forEach(printWriter::println);
             printWriter.close();
         }
     }

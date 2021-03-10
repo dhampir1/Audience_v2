@@ -23,7 +23,7 @@ public class AudienceApp {
         Calendar c2 =Calendar.getInstance();
         System.out.print("data read time: ");
         System.out.println(c2.getTimeInMillis()-c1.getTimeInMillis());
-        audienceAppUtil.calculateAudience(map);
+        audienceAppUtil.saveToFile(audienceAppUtil.calculateAudience(map));
         Calendar c3 =Calendar.getInstance();
         System.out.print("overall time: ");
         System.out.println(c3.getTimeInMillis()-c1.getTimeInMillis());
