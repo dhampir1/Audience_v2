@@ -20,8 +20,6 @@ public class AudienceAppTest
     private final AudienceAppUtil audienceAppUtil = new AudienceAppUtil();
 
     MultiValuedMap<Integer, Statement> exampleInput1 = new ArrayListValuedHashMap<>();
-    MultiValuedMap<Integer, Statement> exampleInput2;
-    MultiValuedMap<Integer, Statement> exampleInput3;
     Statement statement1 = new Statement(1, 101, LocalDateTime.of(2020, Month.of(5), 10, 10, 12, 20 ), "Live");
     Statement statement2 = new Statement(1, 102, LocalDateTime.of(2020, Month.of(5), 10, 10, 13, 20 ), "Playback");
     Statement statement3 = new Statement(1, 103, LocalDateTime.of(2020, Month.of(5), 10, 10, 14, 20 ), "Live");
@@ -32,7 +30,6 @@ public class AudienceAppTest
     Statement statement8 = new Statement(3, 104, LocalDateTime.of(2020, Month.of(5), 12, 10, 0, 0 ), "Live");
 
     List<OutputStatement> expectedOutput1 = new ArrayList<>();
-    List<OutputStatement> expectedOutput2 = new ArrayList<>();
     OutputStatement outputStatement1 = new OutputStatement(1, 101,
             LocalDateTime.of(2020, Month.of(5), 10, 10, 12, 20 ),
             LocalDateTime.of(2020, Month.of(5), 10, 10, 13, 20 ), "Live", 60);
@@ -127,7 +124,7 @@ public class AudienceAppTest
     }
 
     @Test
-    public void calculateAmoutofStatemants(){
+    public void calculateAmountOfStatements(){
         //given
         exampleInput1.put(1, statement1);
         exampleInput1.put(1, statement2);
