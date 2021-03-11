@@ -57,7 +57,11 @@ public class AudienceAppUtil {
                     endTime = statement2.getStartTime().plusDays(1).withHour(0).withMinute(0).withSecond(0);
                     duration = ChronoUnit.SECONDS.between(statement2.getStartTime(), endTime);
                     outputStatements.add(new OutputStatement(statement2.getHomeNumber(), statement2.getChannel(), statement2.getStartTime(), endTime, statement2.getActivity(), duration));
-            }
+                }else {
+                    endTime = statement1.getStartTime().plusDays(1).withHour(0).withMinute(0).withSecond(0);
+                    duration = ChronoUnit.SECONDS.between(statement1.getStartTime(), endTime);
+                    outputStatements.add(new OutputStatement(statement1.getHomeNumber(), statement1.getChannel(), statement1.getStartTime(), endTime, statement1.getActivity(), duration));
+                }
         }
          return outputStatements;
     }
