@@ -20,14 +20,6 @@ public class OutputStatement {
     @Override
     public String toString() {
         String formattedStartTime = startTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        //Fixme I know this part is weird but It follows requirements.
-//        if(endTime.getSecond()!=0){
-//            endTime = endTime.minusSeconds(1);
-//        }else if (endTime.getSecond() == 0 && endTime.getMinute() != 0){
-//            endTime = endTime.minusMinutes(1);
-//        }else if (endTime.getSecond() == 0 && endTime.getMinute() == 0 && endTime.getHour() !=0) {
-//            endTime = endTime.minusHours(1);
-//        }
         String formattedEndTime = endTime.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         return homeNumber +
                 "|" + channel +
